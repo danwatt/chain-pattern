@@ -2,6 +2,7 @@ package com.googlecode.chainpattern.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -156,6 +157,19 @@ public class ChainBaseTests {
 	@Test(expected = IllegalArgumentException.class)
 	public void nullCommandsAreNotAllowed() throws Exception {
 		chain.addCommand(null);
+	}
+
+	@Test
+	public void copyOfCommands() {
+		chain.addCommand(command1);
+		assertEquals(1, chain.getCopyOfCommands().size());
+		assertTrue(chain.getCopyOfCommands().contains(command1));
+	}
+
+	@Test(expected = Exception.class)
+	public void returnedCopyOfCommandsIsImmutable() {
+		chain.addCommand(command1);
+		chain.getCopyOfCommands().add(command2);
 	}
 
 }
