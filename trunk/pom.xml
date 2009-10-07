@@ -74,4 +74,12 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>emma</groupId>
+				<artifactId>emma</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
