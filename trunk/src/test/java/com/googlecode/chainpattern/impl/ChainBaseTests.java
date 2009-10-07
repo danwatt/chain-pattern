@@ -13,11 +13,14 @@ import org.mockito.internal.verification.Times;
 
 import com.googlecode.chainpattern.Chain;
 import com.googlecode.chainpattern.Command;
+import com.googlecode.chainpattern.Filter;
 
 public class ChainBaseTests {
 	ChainBase<Boolean> chain;
 	private Command<Boolean> command1;
 	private Command<Boolean> command2;
+	private Filter<Boolean> filterCommand1;
+	private Filter<Boolean> filterCommand2;
 	private Boolean context;
 
 	@SuppressWarnings("unchecked")
@@ -26,6 +29,8 @@ public class ChainBaseTests {
 		chain = new ChainBase<Boolean>();
 		command1 = mock(Command.class);
 		command2 = mock(Command.class);
+		filterCommand1 = mock(Filter.class);
+		filterCommand2 = mock(Filter.class);
 		context = true;
 	}
 
@@ -100,4 +105,57 @@ public class ChainBaseTests {
 
 		verify(command2, new Times(0)).execute(true);
 	}
+
+	@Test
+	public void singleFilterWithNoExceptions() throws Exception {
+		chain.addCommand(filterCommand1);
+		when(filterCommand1.execute(true)).thenReturn(Chain.CONTINUE_PROCESSING);
+		when(filterCommand1.postprocess(true, null)).thenReturn(false);
+
+		chain.execute(true);
+
+		verify(filterCommand1).execute(true);
+		verify(filterCommand1).postprocess(true, null);
+	}
+
+	@Test
+	public void filterExceptionsAreDiscarded() throws Exception {
+		chain.addCommand(filterCommand1);
+		when(filterCommand1.execute(true)).thenReturn(Chain.CONTINUE_PROCESSING);
+		when(filterCommand1.postprocess(true, null)).thenThrow(new RuntimeException());
+
+		assertEquals(Chain.CONTINUE_PROCESSING, chain.execute(true));
+
+		verify(filterCommand1).execute(true);
+		verify(filterCommand1).postprocess(true, null);
+	}
+
+	@Test
+	public void handledExceptionsResultsPassBackTheResultOfLastStageToBeProcessed() throws Exception {
+		chain.addCommand(filterCommand1);
+		Exception e = new Exception();
+		when(filterCommand1.execute(true)).thenThrow(e);
+		when(filterCommand1.postprocess(true, e)).thenReturn(true);
+
+		assertEquals(Chain.CONTINUE_PROCESSING, chain.execute(true));
+
+		verify(filterCommand1).execute(true);
+		verify(filterCommand1).postprocess(true, e);
+	}
+
+	@Test(expected = Exception.class)
+	public void exceptionnotHandledByPostProcessSoRethrow() throws Exception {
+		chain.addCommand(filterCommand1);
+		Exception e = new Exception();
+		when(filterCommand1.execute(true)).thenThrow(e);
+		when(filterCommand1.postprocess(true, e)).thenReturn(false);
+
+		chain.execute(true);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void nullCommandsAreNotAllowed() throws Exception {
+		chain.addCommand(null);
+	}
+
 }

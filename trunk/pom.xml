@@ -2,11 +2,37 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode</groupId>
-	<artifactId>chainpattern</artifactId>
-	<name>chainpattern</name>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>chain-pattern</artifactId>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+		</license>
+	</licenses>
+	<name>chain-pattern</name>
+	<version>0.1</version>
+	<description>A Java 5 implementation of the Chain of Responsibility pattern. The design was influenced by Apache commons-chain. Generics are used where possible, most importantly for the context that commands execute under.</description>
+	<url>http://code.google.com/p/chain-pattern</url>
+	<inceptionYear>10/01/2009</inceptionYear>
 	<issueManagement>
+		<system>code.google.com</system>
+		<url>http://code.google.com/p/chain-pattern/issues</url>
 	</issueManagement>
+	<developers>
+		<developer>
+			<id>danwatt</id>
+			<name>Dan Watt</name>
+			<email>danwatt@gmail.com</email>
+			<roles>
+			</roles>
+		</developer>
+	</developers>
+	<scm>
+		<connection>SVN</connection>
+		<url>http://chain-pattern.googlecode.com/svn/trunk</url>
+	</scm>
+	<organization>
+	</organization>
 	<build>
 		<testResources>
 		</testResources>
